@@ -222,7 +222,7 @@ switch get(handles.signalMenu,'Value')
         handles.a.motorRun(2,'forward');
         handles.a.motorSpeed(2,handles.speed);
     case 2
-       for j=0:3
+       for j=0:1
         handles.a.motorRun(2,'forward');
         for i=1+j*100:j*100+50
             handles.a.motorSpeed(2,handles.speed);
@@ -234,7 +234,7 @@ switch get(handles.signalMenu,'Value')
             x(i)=0;
         end
         plot(x);
-        axis([0 420 0 270]);
+        axis([0 205 0 260]);
        end
     otherwise
         handles.a.motorRun(2,'forward');
