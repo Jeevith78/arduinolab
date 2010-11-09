@@ -222,7 +222,7 @@ switch get(handles.signalMenu,'Value')
         handles.a.motorRun(2,'forward');
         handles.a.motorSpeed(2,handles.speed);
     case 2
-       for j=0:1
+       for j=0:3
         handles.a.motorRun(2,'forward');
         for i=1+j*100:j*100+50
             handles.a.motorSpeed(2,handles.speed);
