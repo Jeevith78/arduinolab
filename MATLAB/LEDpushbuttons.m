@@ -24,7 +24,7 @@ function varargout = LEDpushbuttons(varargin)
 
 % Edit the above text to modify the response to help LEDpushbuttons
 
-% Last Modified by GUIDE v2.5 07-Nov-2010 14:36:39
+% Last Modified by GUIDE v2.5 09-Nov-2010 22:02:22
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -50,6 +50,7 @@ end
 function LEDpushbuttons_OpeningFcn(hObject, eventdata, handles, varargin)
 set(hObject,'toolbar','figure');
 
+handles.i=0;
 %handles.s = serial('COM4','BaudRate',9600);
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
@@ -217,6 +218,7 @@ function MotorOn_Callback(hObject, eventdata, handles)
 %speed=str2num(get(handles.editSpeed,'String'));
 axes(handles.axes1);
 x=1:400;
+%i=0;
 switch get(handles.signalMenu,'Value')
     case 1 
         handles.a.motorRun(2,'forward');
@@ -234,13 +236,13 @@ switch get(handles.signalMenu,'Value')
             x(i)=0;
         end
         plot(x);
-        axis([0 205 0 260]);
+        axis([0 405 0 260]);
        end
     otherwise
         handles.a.motorRun(2,'forward');
         handles.a.motorSpeed(2,handles.speed);
 end
-
+guidata(hObject, handles);
 
 % hObject    handle to MotorOn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -274,6 +276,52 @@ function signalMenu_CreateFcn(hObject, eventdata, handles)
 guidata(hObject, handles);
 
 % Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function tickCount_Callback(hObject, eventdata, handles)
+% hObject    handle to tickCount (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of tickCount as text
+%        str2double(get(hObject,'String')) returns contents of tickCount as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function tickCount_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to tickCount (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function RPM_Callback(hObject, eventdata, handles)
+% hObject    handle to RPM (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of RPM as text
+%        str2double(get(hObject,'String')) returns contents of RPM as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function RPM_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to RPM (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
