@@ -24,7 +24,7 @@ function varargout = LEDpushbuttons(varargin)
 
 % Edit the above text to modify the response to help LEDpushbuttons
 
-% Last Modified by GUIDE v2.5 09-Nov-2010 22:02:22
+% Last Modified by GUIDE v2.5 20-Nov-2010 12:41:36
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -50,7 +50,7 @@ end
 function LEDpushbuttons_OpeningFcn(hObject, eventdata, handles, varargin)
 set(hObject,'toolbar','figure');
 
-handles.i=0;
+
 %handles.s = serial('COM4','BaudRate',9600);
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
@@ -219,25 +219,44 @@ function MotorOn_Callback(hObject, eventdata, handles)
 axes(handles.axes1);
 x=1:400;
 %i=0;
+P_gain=str2double(get(handles.edit7,'String'));
+I_gain=str2double(get(handles.edit8,'String'));
+D_gain=str2double(get(handles.edit9,'String'));
+error=0;
+preverror=0;
+I_state=0;
 switch get(handles.signalMenu,'Value')
     case 1 
         handles.a.motorRun(2,'forward');
         handles.a.motorSpeed(2,handles.speed);
     case 2
+       adjSpeed=handles.speed;
        for j=0:3
         handles.a.motorRun(2,'forward');
         for i=1+j*100:j*100+50
-            handles.a.motorSpeed(2,handles.speed);
+            handles.a.motorSpeed(2,adjSpeed);
+            %error=handles.speed-realSpeed;
+            P=P_gain*error;
+            D=D_gain*(error-preverror);
+            preverror=error;
+            I_state=I_state+error;
+            I=I_gain*I_state;
+            adjSpeed=adjSpeed+P+I+D;            
             x(i)=handles.speed;
+            %x1(i)=realSpeed;
         end
         handles.a.motorRun(2,'backward');
         for i=j*100+51:j*100+100
-            handles.a.motorSpeed(2,0);
-            x(i)=0;
-        end
-        plot(x);
-        axis([0 405 0 260]);
+            handles.a.motorSpeed(2,handles.speed);
+            x(i)=-handles.speed;
+        end        
        end
+       handles.a.motorSpeed(2,0);
+       plot(x);
+       %hold;
+       %plot(x1);
+       %hold;
+       axis([0 405 -260 260]);
     otherwise
         handles.a.motorRun(2,'forward');
         handles.a.motorSpeed(2,handles.speed);
@@ -318,6 +337,83 @@ function RPM_Callback(hObject, eventdata, handles)
 % --- Executes during object creation, after setting all properties.
 function RPM_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to RPM (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit7_Callback(hObject, eventdata, handles)
+handles.Kp=str2double(get(hObject,'String'));
+guidata(hObject, handles);
+
+% hObject    handle to edit7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit7 as text
+%        str2double(get(hObject,'String')) returns contents of edit7 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit7_CreateFcn(hObject, eventdata, handles)
+
+% hObject    handle to edit7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit8_Callback(hObject, eventdata, handles)
+handles.Ki=str2double(get(hObject,'String'));
+guidata(hObject, handles);
+% hObject    handle to edit8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit8 as text
+%        str2double(get(hObject,'String')) returns contents of edit8 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit8_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit9_Callback(hObject, eventdata, handles)
+handles.Kd=str2double(get(hObject,'String'));
+guidata(hObject, handles);
+% hObject    handle to edit9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit9 as text
+%        str2double(get(hObject,'String')) returns contents of edit9 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit9_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit9 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
