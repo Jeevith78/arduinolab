@@ -144,7 +144,7 @@ end
 
 
 function editSpeed_Callback(hObject, eventdata, handles)
-handles.speed = str2num(get(hObject,'String')); 
+handles.speed = str2double(get(hObject,'String')); 
 %handles.speed=255.*(handles.speed/100);
 if (handles.speed > 255)
     msgbox('Please Enter a Number Between 0 and 255');
@@ -235,6 +235,7 @@ switch get(handles.signalMenu,'Value')
         handles.a.motorRun(2,'forward');
         for i=1+j*100:j*100+50
             handles.a.motorSpeed(2,adjSpeed);
+            fscanf();
             %error=handles.speed-realSpeed;
             P=P_gain*error;
             D=D_gain*(error-preverror);

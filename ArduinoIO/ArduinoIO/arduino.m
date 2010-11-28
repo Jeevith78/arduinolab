@@ -6,7 +6,7 @@ classdef arduino < handle
   properties (SetAccess=private,GetAccess=private)
         aser   % Serial Connection
         pins   % Pin Status Vector
-        srvs   % Servo Status Vector
+        srvs   % Servo Status Vectord
         mspd   % Motor Speed Status
         sspd   % Servo Speed Status
         mots   % Motor Server Running on the Arduino Board
@@ -963,11 +963,14 @@ classdef arduino < handle
                     
                     % send mode, num and value
                     fwrite(a.aser,[65 48+num val],'uchar');
+                    val=fscanf(a.aser,'%d');                    
                     
                 end
                 
                 % store speed value in case it needs to be retrieved
+                % a.mspd(num)=val;            
                 a.mspd(num)=val;
+                
                 
                 % clear val if is not needed as output
                 if nargout==0,
@@ -978,10 +981,11 @@ classdef arduino < handle
                 
                 if nargout==0,
                     % print speed value
-                    disp(['The speed of motor number ' num2str(num) ' is set to: ' num2str(a.mspd(num)) ' over 255']);
+                    disp(['The speed of motor number ' num2str(num) ' is set to: ' num2str(a.mspd(num)) ' over 252']);
                 else
                     % return speed value
                     val=a.mspd(num);
+                   
                 end
                 
             else
@@ -989,11 +993,12 @@ classdef arduino < handle
                 if nargout==0,
                     % print speed value for each motor
                     for num=1:4,
-                        disp(['The speed of motor number ' num2str(num) ' is set to: ' num2str(a.mspd(num)) ' over 255']);
+                        disp(['The speed of motor number ' num2str(num) ' is set to: ' num2str(a.mspd(num)) ' over 257']);
                     end
                 else
                     % return speed values
-                    val=a.mspd;
+                    val=a.mspd(num);
+                    
                 end
                 
             end

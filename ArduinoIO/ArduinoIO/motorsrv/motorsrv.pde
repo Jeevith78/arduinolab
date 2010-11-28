@@ -60,9 +60,11 @@ AF_DCMotor dcm1(1, MOTOR12_64KHZ); // create motor #1, 64KHz pwm
 AF_DCMotor dcm2(2, MOTOR12_64KHZ); // create motor #2, 64KHz pwm
 AF_DCMotor dcm3(3, MOTOR12_64KHZ); // create motor #3, 64KHz pwm
 AF_DCMotor dcm4(4, MOTOR12_64KHZ); // create motor #4, 64KHz pwm
+volatile int count=0;
 
 void setup() {
-  /* initialize serial                                       */
+  /* initialize serial  */
+  attachInterrupt(0,encoder,CHANGE);
   Serial.begin(9600);
 }
 
@@ -334,10 +336,13 @@ void loop() {
 
       case 171:
       /* the third received value indicates the motor speed  */ 
+      count=0;
       if (dcm==1) dcm1.setSpeed(val);
       if (dcm==2) dcm2.setSpeed(val);
       if (dcm==3) dcm3.setSpeed(val);
-      if (dcm==4) dcm4.setSpeed(val);            
+      if (dcm==4) dcm4.setSpeed(val); 
+      delay(100);
+      Serial.println(count);
       s=-1;  /* we are done with servo write so go to -1 next*/
       break; /* s=171 taken care of                          */         
 
@@ -499,3 +504,7 @@ void loop() {
   
 } /* end loop statement                                      */
 
+void encoder()
+{
+  count++;
+}
