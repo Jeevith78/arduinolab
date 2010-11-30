@@ -227,15 +227,17 @@ preverror=0;
 I_state=0;
 switch get(handles.signalMenu,'Value')
     case 1 
-        handles.a.motorRun(2,'forward');
-        handles.a.motorSpeed(2,handles.speed);
+        handles.a.motorRun(2,'forward');       
+        encoderTicks=handles.a.motorSpeed(2,handles.speed);
+        set(handles.tickCount,'String',encoderTicks);
+        Rev=encoderTicks*60;
+        set(handles.RPM,'String',Rev);       
     case 2
        adjSpeed=handles.speed;
        for j=0:3
         handles.a.motorRun(2,'forward');
         for i=1+j*100:j*100+50
             handles.a.motorSpeed(2,adjSpeed);
-            fscanf();
             %error=handles.speed-realSpeed;
             P=P_gain*error;
             D=D_gain*(error-preverror);
